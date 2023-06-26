@@ -1,38 +1,57 @@
-#!/usr/bin/env python3
-""" Factor numbers """
-from sys import argv
-from math import sqrt
+#!/usr/bin/python3
 
 
-def open_read_file(file_name):
-    """read from file
-    add to array
-    """
-    with open(file_name, "r", encoding="utf-8") as file:
-        lines = file.readlines()
-    number_to_factor = []
+import sys
+import time
+
+
+def factorize(num):
+    '''Accepts a numerical value as its input.
+    Args:
+        num: input int.
+        Return: If the number is not a prime, it returns a tuple containing two factors; otherwise, it returns None.
+    '''
+    for i in range(2, int(num**0.5)+1):
+        if num % i == 0:
+            return (i, num//i)
+    return None
+
+
+if __name__ == "__main__":
+
+
+    '''Processes the input file.
+    '''
+    if len(sys.argv) != 2:
+        print("Usage: factors <file>")
+        exit()
+
+
+    input_file = sys.argv[1]
+
+
+    try:
+        with open(input_file, 'r') as f:
+            lines = f.readlines()
+    except FileNotFoundError:
+        print("File not found")
+        exit()
+
+
+    start_time = time.time()
+
+
+    '''Iterates over each line, calling "factorize" on each num. If a tuple of factors is returned, it prints the factorization.
+    '''
     for line in lines:
-        number_to_factor.append(int(line))
-    return number_to_factor
+        num = int(line.strip())
+        factors = factorize(num)
+        if factors:
+            print(f"{num}={factors[0]}*{factors[1]}")
 
 
-def find_and_times(n):
-    """factor each
-    n given
-    """
-    for i in range(1, n):
-        if n == ((n // i) * i):
-            print("{}={}*{}".format(n, (n // i), i))
-            break
-
-
-def fac_list(ls):
-    """factor each
-    num in ls
-    """
-    for i in ls:
-        find_and_times(i)
-
-
-if len(argv) == 2:
-    fac_list(open_read_file(argv[1]))
+        '''If the elapsed time surpasses 5 seconds, the program terminates with an error message.
+        '''
+        if time.time() - start_time > 5:
+            print("Time limit exceeded")
+            exit()
