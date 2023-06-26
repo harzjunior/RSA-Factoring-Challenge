@@ -1,57 +1,7 @@
-#!/usr/bin/python3
-
-
-import sys
-import time
-
-
-def factorize(num):
-    '''Accepts a numerical value as its input.
-    Args:
-        num: input int.
-        Return: If the number is not a prime, it returns a tuple containing two factors; otherwise, it returns None.
-    '''
-    for i in range(2, int(num**0.5)+1):
-        if num % i == 0:
-            return (i, num//i)
-    return None
-
-
-if __name__ == "__main__":
-
-
-    '''Processes the input file.
-    '''
-    if len(sys.argv) != 2:
-        print("Usage: factors <file>")
-        exit()
-
-
-    input_file = sys.argv[1]
-
-
-    try:
-        with open(input_file, 'r') as f:
-            lines = f.readlines()
-    except FileNotFoundError:
-        print("File not found")
-        exit()
-
-
-    start_time = time.time()
-
-
-    '''Iterates over each line, calling "factorize" on each num. If a tuple of factors is returned, it prints the factorization.
-    '''
-    for line in lines:
-        num = int(line.strip())
-        factors = factorize(num)
-        if factors:
-            print(f"{num}={factors[0]}*{factors[1]}")
-
-
-        '''If the elapsed time surpasses 5 seconds, the program terminates with an error message.
-        '''
-        if time.time() - start_time > 5:
-            print("Time limit exceeded")
-            exit()
+#!/usr/bin/bash
+FILE=$1
+while read NUMBERS;
+do
+    factors=($(factor $NUMBERS))
+    echo "$NUMBERS=$(($NUMBERS/${factors[1]}))*${factors[1]}"
+done < $FILE
